@@ -1,0 +1,16 @@
+<phpunit
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.4/phpunit.xsd" 
+         backupGlobals="true"
+         backupStaticAttributes="false"
+         bootstrap="tests/bootstrap.php">
+<testsuites>
+  <testsuite name="Metrou Tests">
+    <directory>tests/unit/</directory>
+    <directory>tests/integration/</directory>
+  </testsuite>
+  <testsuite name="Metrou Integration Tests">
+    <directory>tests/integration/</directory>
+  </testsuite>
+</testsuites>
+</phpunit>

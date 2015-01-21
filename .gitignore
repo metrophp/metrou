@@ -1,0 +1,6 @@
+vendor/
+clover.xml
+html/
+composer.lock
+*~
+/nbproject/private/
