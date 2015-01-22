@@ -46,6 +46,7 @@ class Metrou_Authenticator {
 		if ($err) {
 			$response->addTo('sparkMsg', 'Login Failed');
 			$args = array(
+					'request'=>$request,
 					'subject'=>$this->subject,
 					'user'=>$user
 				);
@@ -59,12 +60,13 @@ class Metrou_Authenticator {
 
 		@$this->handler->applyAttributes($this->subject, $user);
 		$args = array(
+				'request'=>$request,
 				'subject'=>$this->subject,
 				'user'=>$user
 			);
-		Metrofw_Kernel::emit('authenticate.success', $this, $args );
 		$user->username = $uname;
 		$user->password = $this->handler->hashPassword($pass);
+		Metrofw_Kernel::emit('authenticate.success', $this, $args );
 
 		$session = _make('session');
 		$user->login($session);
