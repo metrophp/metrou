@@ -13,7 +13,7 @@ class Metrou_Session {
 	public $longTermStorage  = -1;
 
 	public function __construct($autostart=true) {
-		if (!$autostart) {
+		if ($autostart) {
 			$this->start();
 		}
 	}
