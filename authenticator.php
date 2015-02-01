@@ -21,6 +21,12 @@ class Metrou_Authenticator {
 		$user->startSession($session);
 	}
 
+	/**
+	 * Alias for process
+	 */
+	public function login($request, $response) {
+		return $this->process($request, $response);
+	}
 
 	/**
 	 * Initialize a new handler for the given context.
