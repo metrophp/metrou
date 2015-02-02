@@ -84,6 +84,9 @@ class Metrou_User {
 
 	public function populate($rec) {
 		$this->userId      = @$rec['user_login_id'];
+		if ($this->userId == NULL && array_key_exists('user_id', $rec)) {
+			$this->userId      = @$rec['user_id'];
+		}
 		$this->username    = @$rec['username'];
 		$this->password    = @$rec['password'];
 		$this->email       = @$rec['email'];
