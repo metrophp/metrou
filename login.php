@@ -19,7 +19,8 @@ class Metrou_Login {
 	}
 
 	public function authFailure($event, $args) {
-
+		$response = $args['response'];
+		$response->addUserMessage('login failed', 'msg_warn');
 		_clearHandlers('process');
 		_iCanHandle('process', 'metrou/login.php::mainAction');
 	}
