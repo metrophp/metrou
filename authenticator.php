@@ -53,6 +53,7 @@ class Metrou_Authenticator {
 			$response->addTo('sparkMsg', 'Login Failed');
 			$args = array(
 					'request'=>$request,
+					'response'=>$response,
 					'subject'=>$this->subject,
 					'user'=>$user
 				);
