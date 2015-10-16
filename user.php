@@ -12,7 +12,7 @@ class Metrou_User {
 	public $idProvider      = 'self';
 	public $idProviderToken = NULL;
 	public $validationToken = NULL;
-	public $activeOn        = 0;
+	public $activeOn        = NULL;
 
 	public $enableAgent     = NULL;
 	public $agentKey        = NULL;
@@ -361,6 +361,9 @@ class Metrou_User {
 		}
 		$dataitem->_nuls[]          = 'validation_token';
 		$dataitem->_nuls[]          = 'id_provider_token';
+		$dataitem->_nuls[]          = 'active_on';
+		$dataitem->_nuls[]          = 'enable_agent';
+		$dataitem->_nuls[]          = 'agent_key';
 
 		//user is new, so add registration info
 		if (!$this->userId) {
