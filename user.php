@@ -367,6 +367,15 @@ class Metrou_User {
 
 		//user is new, so add registration info
 		if (!$this->userId) {
+
+			$finder = _makeNew('dataitem', 'user_login');
+			$finder->orWhere('email', $this->email);
+			$finder->orWhere('username', $this->username);
+			$list = $finder->find();
+			if (count($list)) {
+				return FALSE;
+			}
+
 			$session = _make('session');
 			$this->_prepareRegInfo($dataitem, $session);
 		}
@@ -394,7 +403,7 @@ class Metrou_User {
 	 * This method does not set reg_cpm, that is left up to user scripts.
 	 * @param Object $dataItem  Metrodb_Dataitem class from user_login table
 	 */
-	protected function _prepareRegInfo($dataItem, $session) {
+	public function _prepareRegInfo($dataItem, $session) {
 		$dataItem->_nuls[] = 'reg_cpm';
 		$dataItem->_nuls[] = 'reg_id_addr';
 		$dataItem->_nuls[] = 'id_provider_token';
@@ -404,10 +413,6 @@ class Metrou_User {
 		if ($session->get('_sess_referrer') != NULL ) {
 			$dataItem->set('reg_referrer',   $session->get('_sess_referrer'));
 			$dataItem->set('login_referrer', $session->get('_sess_referrer'));
-		}
-		if (isset($_SERVER['REMOTE_ADDR'])) {
-			$dataItem->set('reg_ip_addr',    $_SERVER['REMOTE_ADDR']);
-			$dataItem->set('login_ip_addr',  $_SERVER['REMOTE_ADDR']);
 		}
 
 		$dataItem->set('active_on', $this->activeOn );
