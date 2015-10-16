@@ -44,6 +44,9 @@ class Metrou_Authenticator {
 
 		$user = _make('user');
 		$uname = $request->cleanString('username');
+		if ($uname == '') {
+			$uname = $request->cleanString('email');
+		}
 		$pass  = $request->cleanString('password');
 
 		$this->subject = Metrou_Subject::createFromUsername($uname, $pass);
@@ -129,6 +132,7 @@ class Metrou_Authdefault implements Metrou_Authiface {
 
 		$finder = _makeNew('dataitem', 'user_login');
 		$finder->andWhere('username', $subject->credentials['username']);
+		$finder->orWhereSub('email', $subject->credentials['username']);
 		$finder->andWhere('password', $subject->credentials['passwordhash']);
 		$finder->_rsltByPkey = FALSE;
 		$results = $finder->findAsArray();
