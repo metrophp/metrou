@@ -8,6 +8,9 @@ class Metrou_Intg_Tests_User extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$this->user = new Metrou_User();
+
+		$db = Metrodb_Connector::getHandle('default');
+		$db->execute('TRUNCATE `user_login`');
 	}
 
 	public function test_save_new_user() {
