@@ -54,8 +54,9 @@ class Metrou_Sessiondb extends Metrou_Session {
 		$sess->set('user_sess_key', $id);
 		$sess->andWhere('user_sess_key',$id);
 		$sess->_rsltByPkey = FALSE;
+		$sess->_typeMap['user_sess_key'] = 'string';
 		$sessions = $sess->find();
-		if (count($sessions)) {
+		if (count($sessions) && is_array($sessions)) {
 			$sess = $sessions[0];
 			if ( strlen($sess->data) ) {
 				return (string) $sess->data;
@@ -78,16 +79,19 @@ class Metrou_Sessiondb extends Metrou_Session {
 		$sess = _makeNew('dataitem', 'user_sess', 'user_sess_key');
 		$sess->andWhere('user_sess_key', $id);
 		$sess->_rsltByPkey = FALSE;
+		$sess->_typeMap['user_sess_key'] = 'string';
 		$sessions = $sess->find();
 
-		if (count($sessions)) {
+		if (count($sessions) && is_array($sessions)) {
 			$sess = $sessions[0];
 		} else {
 			$sess = _makeNew('dataitem', 'user_sess', 'user_sess_key');
 			$sess->user_sess_key = $id;
 		}
 		$sess->set('lts', $this->longTermStorage);
-		$sess->_typeMap['lts'] = 'int';
+		$sess->_typeMap['lts']           = 'int';
+		$sess->_typeMap['user_sess_key'] = 'string';
+		$sess->_typeMap['data']          = 'text';
 
 		//TODO fix this so it works behind load balancers
 		$sess->set('ip_addr', $_SERVER['REMOTE_ADDR']);
