@@ -104,9 +104,9 @@ class Metrou_User {
 	 * Load group association from the database
 	 */
 	public function loadGroups() {
-		$finder = _makeNew('dataitem', 'user_group_rel');
+		$finder = _makeNew('dataitem', 'user_group_link');
 		$finder->andWhere('user_login_id', $this->userId);
-		$finder->hasOne('user_group', 'user_group_id');
+		$finder->hasOne('user_group', 'UG', 'user_group_id', 'user_group_id');
 		$groups = $finder->find();
 		$this->groups = array();
 		foreach ($groups as $_group) {
