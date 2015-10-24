@@ -11,8 +11,8 @@ class Metrou_Logout {
 	 */
 	public function authenticate($request, $response) {
 
-		$user    = _make('user');
-		$session = _make('session');
+		$user    = $request->getUser();
+		$session = $request->getSession();
 		$user->startSession($session);
 		//unbind is only for testing
 		//$user->unBindSession($session);
