@@ -14,7 +14,9 @@ class Metrou_Logout {
 		$user    = _make('user');
 		$session = _make('session');
 		$user->startSession($session);
-		$user->unBindSession($session);
+		//unbind is only for testing
+		//$user->unBindSession($session);
+		$session->erase();
 		$response->redir = m_appurl();
 		return;
 	}
