@@ -164,6 +164,7 @@ class Metrou_Authdefault implements Metrou_Authiface {
 		$user->email    = $attribs['email'];
 		$user->locale   = $attribs['locale'];
 		$user->tzone    = $attribs['tzone'];
+		$user->activeOn = $attribs['active_on'];
 		$user->userId   = $attribs['user_login_id'];
 
 		$user->enableAgent = $attribs['enable_agent'] == '1'? TRUE : FALSE;
