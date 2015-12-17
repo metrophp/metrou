@@ -3,11 +3,15 @@
 class Metrou_Login {
 
 	public function accessDenied($event, $args) {
-		if ($args['request']->appName == 'login') {
-			return;
-		}
+		$response = \_make('response');
+		$response->statusCode = 403;
 		_clearHandlers('process');
-		_iCanHandle('process', 'metrou/login.php::mainAction');
+		$user = \_make('user');
+		if ( $user->isAnonymous()) {
+			$response->statusCode = 401;
+			_iCanHandle('process', 'metrou/login.php::mainAction');
+		}
+		return TRUE;
 	}
 
 	public function authSuccess($event, $args) {
