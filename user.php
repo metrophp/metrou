@@ -345,6 +345,10 @@ class Metrou_User {
 		if ($authHandler == NULL) {
 			$authHandler = _make('auth_handler');
 		}
+		if ($authHandler == NULL || $authHandler instanceof Metrodi_Proto) {
+			$authHandler = new Metrou_Authdefault();
+		}
+
 		$this->password = $authHandler->hashPassword($this->password);
 		return TRUE;
 	}
