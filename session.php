@@ -11,6 +11,7 @@ class Metrou_Session {
 	public $touchTime        = -1;
 	public $lastTouchTime    = -1;
 	public $longTermStorage  = -1;
+	public $isDirty          = TRUE;  //dirty check not supported by default
 
 	public function __construct($autostart=true) {
 		if ($autostart) {
@@ -57,6 +58,7 @@ class Metrou_Session {
 		setcookie( $this->sessionName, session_id(), time()+(86400*365), '/', $olddomain, $oldsecure, TRUE );
 		$this->sessionId = session_id();
 		//set lts so we never GC this cookie
+
 		$this->longTermStorage = 1;
 		$this->touch();
 	}
@@ -68,6 +70,8 @@ class Metrou_Session {
 	public function set($key, $val) { }
 
 	public function setArray($a) { }
+
+	public function getMeta($key, $default=NULL) { }
 
 	public function get($key) { }
 
@@ -94,6 +98,7 @@ class Metrou_Session {
 		} else {
 			$this->touchTime = $t;
 		}
+
 		$this->set('_touch',     $this->touchTime);
 		$this->set('_lastTouch', $this->lastTouchTime);
 	}
@@ -108,7 +113,6 @@ class Metrou_Session {
 		} else {
 			$this->authTime = $t;
 		}
-
 		$this->set('_auth', $this->authTime);
 	}
 
@@ -149,19 +153,19 @@ class Metrou_Session {
 	 * Opposite of commit, like magic __wakeup.
 	 */
 	public function begin() {
-		$touch = $this->get('_touch');
+		$touch = $this->getMeta('_touch');
 		if ($touch !== NULL) {
 			$this->touchTime = $touch;
 		}
-		$auth = $this->get('_auth');
+		$auth = $this->getMeta('_auth');
 		if ($auth !== NULL) {
 			$this->authTime = $auth;
 		}
-		$last = $this->get('_lastTouch');
+		$last = $this->getMeta('_lastTouch');
 		if ($last !== NULL) {
 			$this->lastTouchTime = $last;
 		}
-		$lts = $this->get('_lts');
+		$lts = $this->getMeta('_lts');
 		if ($lts !== NULL) {
 			$this->longTermStorage = $lts;
 		}
