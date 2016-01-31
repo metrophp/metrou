@@ -17,6 +17,8 @@ class Metrou_Login {
 	public function authSuccess($event, $args) {
 		$session = _make('session');
 		$request = $args['request'];
+
+		$session->setAuthTime();
 		if ($request->cleanString('remember_me')) {
 			$session->enableLts();
 		}
