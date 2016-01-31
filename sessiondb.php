@@ -22,7 +22,7 @@ class Metrou_Sessiondb extends Metrou_Session {
 		//some php.ini's don't use the gc setting, they assume
 		//that a cron will clean up /var/lib/php/
 		//We will set a gc func here 10% of the time
-		if (rand(1,10) > 9)
+		if (rand(1,100) > 90)
 			register_shutdown_function( array(&$this, 'gc') );
 
 		parent::start();
