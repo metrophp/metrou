@@ -35,6 +35,14 @@ class Metrou_Sessionsimple extends Metrou_Session {
 		$_SESSION[$key] = $val;
 	}
 
+	public function getMeta($key, $default=NULL) {
+		$x = $this->get($key);
+		if ($x === NULL) {
+			return $default;
+		}
+		return $x;
+	}
+
 	public function get($key) { 
 		if (isset($_SESSION[$key])) {
 			return @$_SESSION[$key];
