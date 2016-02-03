@@ -18,6 +18,7 @@ class Metrou_Authenticator {
 	public function authenticate($request, $response) {
 		$user    = _make('user');
 		$session = _make('session');
+		$session->start();
 		$user->startSession($session);
 	}
 
