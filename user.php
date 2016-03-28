@@ -474,7 +474,7 @@ class Metrou_User {
 		if ($session->get('user_id') == 0 ) {
 			return FALSE;
 		}
-		$this->populate( $session->valuesAsArray());
+		$this->populate( $session->valuesAsArray() );
 
 		$this->loggedIn = TRUE;
 		$this->groups = unserialize( $session->get('groups') );
