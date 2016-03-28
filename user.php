@@ -495,7 +495,7 @@ class Metrou_User {
 		//$session = _make('session');
 		$session->setAuthTime();
 		$session->set('user_id',         $this->userId);
-		$session->set('last_bind_time',  time());
+//		$session->clear('last_bind_time');
 		$session->set('username',        $this->username);
 		$session->set('email',           $this->email);
 		$session->set('password',        $this->password);
@@ -520,7 +520,7 @@ class Metrou_User {
 	 */
 	public function unBindSession($session) {
 		$session->clear('user_id');
-		$session->clear('last_bind_time');
+//		$session->clear('last_bind_time');
 		$session->clear('username');
 		$session->clear('email');
 		$session->clear('password');
