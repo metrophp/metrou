@@ -82,6 +82,16 @@ class Metrou_User {
 		return $user;
 	}
 
+	public function loadById($key) {
+		if ($key < 1) { return FALSE; }
+
+		$item = _makeNew('dataitem', 'user_login');
+		$item->load($key);
+		$this->populate( $item->valuesAsArray() );
+		return TRUE;
+	}
+
+
 	public function populate($rec) {
 		$this->userId      = @$rec['user_login_id'];
 		if ($this->userId == NULL && array_key_exists('user_id', $rec)) {
