@@ -13,6 +13,7 @@ class Metrou_Logout {
 
 		$user    = _make('user');
 		$session = _make('session');
+		$session->start();
 		$user->startSession($session);
 		//unbind is only for testing
 		//$user->unBindSession($session);
