@@ -1,7 +1,7 @@
 <?php
 include('vendor/autoload.php');
 
-include('vendor/metrodi/container.php');
+include('vendor/metrophp/metrodi/container.php');
 
 _didef('dataitem', 'Metrodb_Dataitem');
 _didef('auth_handler', '\Metrou_Authdefault');
