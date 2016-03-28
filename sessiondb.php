@@ -209,6 +209,22 @@ class Metrou_Sessiondb extends Metrou_Session {
 	}
 
 	/**
+	 * Completely erase a session
+	 * The DB sessions are different than file sessions
+	 * when the session is erased we just clear the "data" column
+	 * and $_SESSION array.  We don't erase IPs, cookies, or other meta data.
+	 */
+	public function erase() {
+		$this->clearAll();
+		//we mustn't call session_destroy()
+		//or subsequent calls to session_encode()
+		//will fail.
+		//session_destroy();
+		$this->started = FALSE;
+	}
+
+
+	/**
 	 * Clear all session variables
 	 */
 	public function clearAll() {

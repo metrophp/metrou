@@ -184,7 +184,6 @@ class Metrou_Session {
 	public function erase() {
 		$this->clearAll();
 		session_destroy();
-		//setcookie($this->sessionName, '');
 		$this->started = FALSE;
 	}
 
