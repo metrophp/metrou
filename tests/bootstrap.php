@@ -3,6 +3,8 @@ include('vendor/autoload.php');
 
 include('vendor/metrophp/metrodi/container.php');
 
+$container = New Metrodi_Container('.', array('.', '..', 'vendor'));
+
 _didef('dataitem', 'Metrodb_Dataitem');
 _didef('auth_handler', '\Metrou_Authdefault');
 

@@ -352,12 +352,18 @@ class Metrou_User {
 		if (!isset($this->password) || $this->password == '') {
 			return FALSE;
 		}
+
+		$hashAdapterList = _get('auth.hashList', array());
+		if ( !count($hashAdapterList) ) {
+			$hashAdapterList = array( _make('metrou/hash/bcrypt.php') );
+		}
 		if ($authHandler == NULL) {
 			$authHandler = _make('auth_handler');
 		}
 		if ($authHandler == NULL || $authHandler instanceof Metrodi_Proto) {
 			$authHandler = new Metrou_Authdefault();
 		}
+		$authHandler->setHashAdapters($hashAdapterList);
 
 		$this->password = $authHandler->hashPassword($this->password);
 		return TRUE;

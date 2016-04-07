@@ -2,6 +2,8 @@
 /**
  * Metrou_Authenticator
  *
+ * _set() auth.hashList to an array of HashAdapter objects.
+ * Any class that has hashPassword($password) and comparePasswordHash($password, $hash) will do.
  */
 class Metrou_Authenticator {
 
@@ -42,6 +44,11 @@ class Metrou_Authenticator {
 			$this->handler = new Metrou_Authdefault();
 		}
 		$this->handler->initContext($configs);
+		$hashAdapterList = _get('auth.hashList', array());
+		if ( !count($hashAdapterList) ) {
+			$hashAdapterList = array( _make('metrou/hash/bcrypt.php') );
+		}
+		$this->handler->setHashAdapters($hashAdapterList);
 
 		$user = _make('user');
 		$uname = $request->cleanString('username');
@@ -111,14 +118,31 @@ interface Metrou_Authiface {
 	 */
 	public function applyAttributes($subject, $existingUser);
 
+	/**
+	 * Set a list of hash implementations
+	 */
+	public function setHashAdapters($hashList);
+
+	/**
+	 * Compare a password against a list of adapters
+	 */
+	public function comparePasswordHash($pwd, $hash);
 }
 
 class Metrou_Authdefault implements Metrou_Authiface {
+
+	public $hashAdapters = array();
 
 	public function initContext($ctx) {
 		return $this;
 	}
 
+	/**
+	 * Set a list of hash implementations
+	 */
+	public function setHashAdapters($hashList) {
+		$this->hashAdapters = $hashList;
+	}
 
 	/**
 	 * Return any positive number other than 0 to indicate an error
@@ -134,7 +158,6 @@ class Metrou_Authdefault implements Metrou_Authiface {
 		$finder = _makeNew('dataitem', 'user_login');
 		$finder->andWhere('username', $subject->credentials['username']);
 		$finder->orWhereSub('email', $subject->credentials['username']);
-		$finder->andWhere('password', $subject->credentials['passwordhash']);
 		$finder->_rsltByPkey = FALSE;
 		$results = $finder->findAsArray();
 
@@ -147,12 +170,34 @@ class Metrou_Authdefault implements Metrou_Authiface {
 			return 502;
 		}
 
+		$candidate = $results[0];
+
+		if (!$this->comparePasswordHash($subject->credentials['password'], $candidate['password'])) {
+			return 501;
+		}
+
 		$subject->attributes = array_merge($subject->attributes, $results[0]);
 		return 0;
 	}
 
 	public function hashPassword($p) {
-		return md5(sha1($p));
+		foreach ($this->hashAdapters as $_hash) {
+			$hashed = $_hash->hashPassword($p);
+			if ($hashed != FALSE) {
+				return $hashed;
+			}
+		}
+		return FALSE;
+	}
+
+	public function comparePasswordHash($pwd, $hash) {
+		foreach ($this->hashAdapters as $_hash) {
+			$match = $_hash->comparePasswordHash($pwd, $hash);
+			if ($match != FALSE) {
+				return $match;
+			}
+		}
+		return FALSE;
 	}
 
 	/**
@@ -176,7 +221,7 @@ class Metrou_Authdefault implements Metrou_Authiface {
 	}
 }
 
-class Metrou_Authldap implements Metrou_Authiface {
+class Metrou_Authldap extends Metrou_Authdefault implements Metrou_Authiface {
 
 	public $dsn        = '';
 	public $bindBaseDn = '';
@@ -240,10 +285,6 @@ class Metrou_Authldap implements Metrou_Authiface {
 
 //		$subject->attributes = array_merge($subject->attributes, $results[0]);
 		return 0;
-	}
-
-	public function hashPassword($p) {
-		return md5(sha1($p));
 	}
 
 	/**
