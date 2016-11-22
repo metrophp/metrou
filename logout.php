@@ -15,8 +15,11 @@ class Metrou_Logout {
 		$session = _make('session');
 		$session->start();
 		$user->startSession($session);
-		//unbind is only for testing
-		//$user->unBindSession($session);
+		//resetValues sets isLoggedIn = FALSE
+		//and username = "anonymous"
+		//and userId   = 0
+		//which is needed by downstream libraries
+		$user->resetValues();
 		$session->erase();
 		$response->redir = m_appurl();
 		return;

@@ -112,6 +112,22 @@ class Metrou_User {
 		return $this;
 	}
 
+	public function resetValues() {
+		$this->userId          = 0;
+		$this->loggedIn        = FALSE;
+		$this->username        = 'anonymous';
+		$this->password        = '';
+		$this->email           = '';
+		$this->locale          = '';
+		$this->tzone           = '';
+		$this->activeOn        = NULL;
+		$this->validationToken = NULL;
+		$this->idProviderToken = NULL;
+		$this->enableAgent     = NULL;
+		$this->agentKey        = NULL;
+		return $this;
+	}
+
 	/**
 	 * Load group association from the database
 	 */
