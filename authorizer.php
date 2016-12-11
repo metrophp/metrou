@@ -11,8 +11,11 @@ class Metrou_Authorizer {
 	public function requireLogin($request, $response, $user, $kernel) {
 		if ($user->isAnonymous()) {
 			$request->unauthorized = TRUE;
-			$kernel->signal('access.denied', $user);
-//			Metrofw_Kernel::emit('access.denied', $user);
+			$args = array(
+				'request' => $request,
+				'user'    => $user
+			);
+			$kernel->signal('access.denied', $user, $args);
 		}
 	}
 }
