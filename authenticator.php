@@ -7,10 +7,10 @@
  */
 class Metrou_Authenticator {
 
-	public $handler  = NULL;
-	public $ctx      = NULL;
-	public $subject  = NULL;
-	public $configs  = array();
+	public $handler     = NULL;
+	public $handlerList = array();
+	public $ctx         = NULL;
+	public $subject     = NULL;
 
 	/**
 	 * Authenticate the user, are they who they say they are
@@ -36,54 +36,70 @@ class Metrou_Authenticator {
 	 * If no context is supplied, a default handler will be created.
 	 * The default handler is based on the local mysql installation.
 	 */
-	public function process($request, $response) {
-		$configs       = _get('auth_configs', array());
-		$this->handler = _make('auth_handler');
-
-		if ($this->handler == NULL || $this->handler instanceof Metrodi_Proto) {
-			$this->handler = new Metrou_Authdefault();
-		}
-		$this->handler->initContext($configs);
-		$hashAdapterList = _get('auth.hashList', array());
-		if ( !count($hashAdapterList) ) {
-			$hashAdapterList = array( _make('metrou/hash/bcrypt.php') );
-		}
-		$this->handler->setHashAdapters($hashAdapterList);
-
-		$user = _make('user');
+	public function process($request, $response, $user) {
 		$uname = $request->cleanString('username');
 		if ($uname == '') {
 			$uname = $request->cleanString('email');
 		}
 		$pass  = $request->cleanString('password');
 
+		$configs       = _get('auth_configs', array());
+		$this->handler = _make('auth_handler');
+
+		if ($this->handler == NULL || $this->handler instanceof Metrodi_Proto) {
+			$this->handlerList = _get('auth.handlerList');
+		}
+
+		if ($this->handler instanceof Metrou_Authiface) {
+			$this->handlerList = array($this->handler);
+		}
+
+		if ($this->handlerList == NULL || count($this->handlerList) == 0) {
+			$this->handlerList = array(new Metrou_Authdefault());
+		}
+
+		$hashAdapterList = _get('auth.hashList', array());
+		if ( !count($hashAdapterList) ) {
+			$hashAdapterList = array( _make('metrou/hash/bcrypt.php') );
+		}
+
 		$this->subject = Metrou_Subject::createFromUsername($uname, $pass);
-		$err = $this->handler->authenticate($this->subject);
+
+		$successHandler = NULL;
+		foreach($this->handlerList as $handler) {
+			$handler->initContext($configs);
+			$handler->setHashAdapters($hashAdapterList);
+			$err = $handler->authenticate($this->subject);
+			//if success, then break
+			if (!$err) {
+				$successHandler = $handler;
+				break;
+			}
+		}
 
 		if ($err) {
-			$response->addTo('sparkMsg', 'Login Failed');
 			$args = array(
-					'request'=>$request,
-					'response'=>$response,
-					'subject'=>$this->subject,
-					'user'=>$user
-				);
+			    'request'=>$request,
+			    'response'=>$response,
+			    'subject'=>$this->subject,
+			    'user'=>$user
+			);
 			Metrofw_Kernel::emit('authenticate.failure', $this, $args);
 			return;
 		}
-		$response->addTo('sparkMsg', 'Login Succeeded');
+
 		if ($request->appUrl == 'login') {
 			$response->redir = m_appurl();
 		}
 
-		@$this->handler->applyAttributes($this->subject, $user);
+		@$successHandler->applyAttributes($this->subject, $user);
 		$args = array(
 				'request'=>$request,
 				'subject'=>$this->subject,
 				'user'=>$user
 			);
 		$user->username = $uname;
-		$user->password = $this->handler->hashPassword($pass);
+		$user->password = $successHandler->hashPassword($pass);
 		Metrofw_Kernel::emit('authenticate.success', $this, $args );
 
 		$session = _make('session');
