@@ -27,8 +27,8 @@ class Metrou_Authenticator {
 	/**
 	 * Alias for process
 	 */
-	public function login($request, $response) {
-		return $this->process($request, $response);
+	public function login($request, $response, $user) {
+		return $this->process($request, $response, $user);
 	}
 
 	/**
