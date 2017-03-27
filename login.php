@@ -9,7 +9,7 @@ class Metrou_Login {
 		$user = \_make('user');
 		if ( $user->isAnonymous()) {
 			$response->statusCode = 401;
-			_iCanHandle('process', 'metrou/login.php::mainAction');
+			_connect('process', 'metrou/login.php::mainAction');
 		}
 		return TRUE;
 	}
@@ -35,6 +35,7 @@ class Metrou_Login {
 	 * Show templates/{template_name}/login.html.php
 	 */
 	public function mainAction() {
-		_set('template_layout', 'login');
+		_set('template_layout',    'login');
+		_set('template.main.file', '/metrou/login_main');
 	}
 }
