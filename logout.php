@@ -20,6 +20,7 @@ class Metrou_Logout {
 		//and userId   = 0
 		//which is needed by downstream libraries
 		$user->resetValues();
+		$user->unBindSession($session);
 		$session->erase();
 		$response->redir = m_appurl();
 		return;
