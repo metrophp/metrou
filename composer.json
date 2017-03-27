@@ -26,7 +26,7 @@
     ],
 	"require-dev": {
 		"metrophp/metrodi": ">=3.3.0",
-		"metrofw": ">=1.1.0",
+		"metrofw": ">=2.4.0",
 		"metrodb": ">=1.4.0"
 	},
     "require": {}
