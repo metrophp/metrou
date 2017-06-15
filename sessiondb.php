@@ -54,12 +54,23 @@ class Metrou_Sessiondb extends Metrou_Session {
 	}
 
 	public function read($id) {
-		$sess = _makeNew('dataitem', 'user_sess', 'user_sess_key');
-		$sess->set('user_sess_key', $id);
-		$sess->andWhere('user_sess_key',$id);
-		$sess->_rsltByPkey = FALSE;
-		$sess->_typeMap['user_sess_key'] = 'string';
-		$sessions = $sess->find();
+		$this->readeritem = _makeNew('dataitem', 'user_sess', 'user_sess_key');
+		$this->readeritem->_typeMap['user_sess_key'] = 'string';
+		$this->readeritem->set('user_sess_key', $id);
+		$q = $this->readeritem->loadExisting();
+		if ($q) {
+			if ( strlen($this->readeritem->data) ) {
+				$this->hashOrig = sha1($this->readeritem->data);
+				return (string) $this->readeritem->data;
+			}
+			return '';
+		}
+		var_dump(
+			$q
+		);
+		return FALSE;
+//		$sess->andWhere('user_sess_key',$id);
+//		$sess->_rsltByPkey = FALSE;
 
 		if (count($sessions) && is_array($sessions)) {
 			$this->readeritem = $sessions[0];
@@ -162,8 +173,15 @@ class Metrou_Sessiondb extends Metrou_Session {
 	}
 
 	public function set($key, $val) {
-		$this->isDirty = TRUE;
-		$_SESSION[$key] = $val;
+		if (array_key_exists($key, $_SESSION)) {
+			if ($_SESSION[$key] != $val) {
+				$_SESSION[$key] = $val;
+				$this->isDirty = TRUE;
+			}
+		} else {
+			$_SESSION[$key] = $val;
+			$this->isDirty = TRUE;
+		}
 	}
 
 	public function getMeta($key, $default=NULL) {
