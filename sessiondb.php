@@ -50,7 +50,6 @@ class Metrou_Sessiondb extends Metrou_Session {
 		$sess->andWhere('saved_on', (time()- $this->timeout), '<');
 		$sess->andWhere('lts', '1', '!=');
 		$sess->delete();
-		$this->readeritem = NULL;
 		return TRUE;
 	}
 
