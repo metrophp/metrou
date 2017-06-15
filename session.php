@@ -89,18 +89,28 @@ class Metrou_Session {
 			$this->begin();
 		}
 
-		if ($this->touchTime !== -1) {
+		//specific time
+		if ($t !== 0 ) {
 			$this->lastTouchTime = $this->touchTime;
-		}
-
-		if ($t == 0) {
-			$this->touchTime = time();
-		} else {
 			$this->touchTime = $t;
+			$this->set('_touch',     $this->touchTime);
+			$this->set('_lastTouch', $this->lastTouchTime);
 		}
 
-		$this->set('_touch',     $this->touchTime);
-		$this->set('_lastTouch', $this->lastTouchTime);
+		if ($this->touchTime === -1 || $this->lastTouchTime === -1) {
+			$this->lastTouchTime = $this->touchTime;
+			$this->touchTime = time();
+			$this->set('_touch',     $this->touchTime);
+			$this->set('_lastTouch', $this->lastTouchTime);
+		}
+
+		//optimize - only save when touch time is greater than 3 sec
+		if ( ( time() - $this->lastTouchTime ) > 3) {
+			$this->lastTouchTime = $this->touchTime;
+			$this->touchTime = time();
+			$this->set('_touch',     $this->touchTime);
+			$this->set('_lastTouch', $this->lastTouchTime);
+		}
 	}
 
 	/**
