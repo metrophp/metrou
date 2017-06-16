@@ -98,7 +98,6 @@ class Metrou_Authenticator {
 				'subject'=>$this->subject,
 				'user'=>$user
 			);
-		$user->username = $uname;
 		$user->password = $successHandler->hashPassword($pass);
 		Metrofw_Kernel::emit('authenticate.success', $this, $args );
 
@@ -224,6 +223,7 @@ class Metrou_Authdefault implements Metrou_Authiface {
 	public function applyAttributes($subject, $user) { 
 		$attribs        = $subject->attributes;
 		$user->email    = $attribs['email'];
+		$user->username = $attribs['username'];
 		$user->locale   = $attribs['locale'];
 		$user->tzone    = $attribs['tzone'];
 		$user->activeOn = $attribs['active_on'];
