@@ -65,10 +65,8 @@ class Metrou_Sessiondb extends Metrou_Session {
 			}
 			return '';
 		}
-		var_dump(
-			$q
-		);
-		return FALSE;
+		return '';
+		/*
 //		$sess->andWhere('user_sess_key',$id);
 //		$sess->_rsltByPkey = FALSE;
 
@@ -83,6 +81,7 @@ class Metrou_Sessiondb extends Metrou_Session {
 			$this->readeritem = $sess;
 		}
 		return FALSE;
+		 */
 	}
 
 	public function open($path, $name) {
