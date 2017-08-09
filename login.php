@@ -15,12 +15,27 @@ class Metrou_Login {
 	}
 
 	public function authSuccess($event, $args) {
-		$session = _make('session');
-		$request = $args['request'];
+		$session  = _make('session');
+		$request  = $args['request'];
+		$response = \_make('response');
 
 		$session->setAuthTime();
 		if ($request->cleanString('remember_me')) {
 			$session->enableLts();
+		}
+
+		$response->addUserMessage('Login succeeded');
+		if ($request->appUrl == 'login') {
+			$response->redir = m_appurl();
+		}
+		//We must be mindful of redirecting offsite.
+		//if there is a list of trusted offsite redirects
+		//then connect to authenticate.success and
+		//overwrite $response->redir
+		if (strlen($request->cleanString('redir_url')) > 5) {
+			$redir = $request->cleanString('redir_url');
+			$redir = ltrim($redir, '/');
+			$response->redir = m_appurl() . $redir;
 		}
 	}
 
