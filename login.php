@@ -11,6 +11,16 @@ class Metrou_Login {
 			$response->statusCode = 401;
 			_connect('process', 'metrou/login.php::mainAction');
 		}
+		//pass the redirect_url if any, otherwise set the current URL as rediret
+		$request = \_make('request');
+		if ($request->cleanString('redir_url')) {
+			$response->redir_url = $request->cleanString('redir_url');
+		} else {
+			$response->redir_url = $request->requestedUrl;
+			if (array_key_exists('QUERY_STRING', $_SERVER) && $_SERVER['QUERY_STRING'] != '') {
+				$response->redir_url .= '?'.$_SERVER['QUERY_STRING'];
+			}
+		}
 		return TRUE;
 	}
 
@@ -44,6 +54,11 @@ class Metrou_Login {
 		$response->addUserMessage('login failed', 'msg_warn');
 		_clearHandlers('process');
 		_iCanHandle('process', 'metrou/login.php::mainAction');
+		//pass the redirect_url if any
+		$request = \_make('request');
+		if ($request->cleanString('redir_url')) {
+			$response->redir_url = $request->cleanString('redir_url');
+		}
 	}
 
 	/**
