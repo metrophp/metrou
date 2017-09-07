@@ -214,6 +214,6 @@ class Metrou_Session {
 	}
 
 	public function isNew() {
-		return $this->lastTouchTime === -1;
+		return $this->lastTouchTime === -1 || $this->lastTouchTime == $this->touchTime;
 	}
 }

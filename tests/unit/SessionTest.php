@@ -15,7 +15,13 @@ class Metrou_Tests_Session extends PHPUnit_Framework_TestCase {
 		$touchTime = time();
 		
 		$this->assertEquals($touchTime, $this->session->touchTime);
-		$this->assertEquals(-1,         $this->session->lastTouchTime);
+		$this->assertEquals($touchTime, $this->session->lastTouchTime);
+
+
+		//simulate hit in the future
+		$this->session->touch($touchTime+10);
+		$this->assertEquals($touchTime+10, $this->session->touchTime);
+		$this->assertEquals($touchTime, $this->session->lastTouchTime);
 	}
 
 	public function test_start_session_is_new() {
@@ -23,5 +29,9 @@ class Metrou_Tests_Session extends PHPUnit_Framework_TestCase {
 		$touchTime = time();
 		
 		$this->assertTrue( $this->session->isNew() );
+
+		//simulate hit in the future
+		$this->session->touch($touchTime+10);
+		$this->assertFalse( $this->session->isNew() );
 	}
 }
