@@ -7,10 +7,21 @@
 <testsuites>
   <testsuite name="Metrou Tests">
     <directory>tests/unit/</directory>
-    <directory>tests/integration/</directory>
   </testsuite>
   <testsuite name="Metrou Integration Tests">
     <directory>tests/integration/</directory>
   </testsuite>
 </testsuites>
+<filter>
+  <whitelist>
+    <directory suffix=".php">.</directory>
+	<exclude>
+    <directory>vendor/</directory>
+    <directory>tests/</directory>
+    </exclude>
+  </whitelist>
+  <blacklist>
+    <directory>vendor/</directory>
+  </blacklist>
+</filter>
 </phpunit>
