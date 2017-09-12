@@ -200,7 +200,8 @@ class Metrou_User {
 			unset($newGroup->user_group_link_id);
 			$newGroup->user_group_id = $_g;
 			$newGroup->user_login_id = $this->getUserId();
-			$newGroup->activeOn  = time();
+			//created on and updated_on should suffice
+			//$newGroup->activeOn  = time();
 			$newGroup->save();
 		}
 
