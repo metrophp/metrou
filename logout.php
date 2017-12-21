@@ -9,7 +9,7 @@ class Metrou_Logout {
 	 * If no context is supplied, a default handler will be created.
 	 * The default handler is based on the local mysql installation.
 	 */
-	public function authenticate($request, $response) {
+	public function authenticate($request, $response, $kernel) {
 
 		$user    = _make('user');
 		$session = _make('session');
@@ -22,7 +22,11 @@ class Metrou_Logout {
 		$user->resetValues();
 		$user->unBindSession($session);
 		$session->erase();
+
 		$response->redir = m_appurl();
+
+		$args = ['response'=>$response];
+		$signalResult = $kernel->signal('logout.after', $this, $args);
 		return;
 	}
 }
