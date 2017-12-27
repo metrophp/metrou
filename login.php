@@ -47,6 +47,7 @@ class Metrou_Login {
 			$redir = ltrim($redir, '/');
 			$response->redir = m_appurl() . $redir;
 		}
+		return TRUE;
 	}
 
 	public function authFailure($event, $args) {
@@ -59,6 +60,7 @@ class Metrou_Login {
 		if ($request->cleanString('redir_url')) {
 			$response->redir_url = $request->cleanString('redir_url');
 		}
+		return TRUE;
 	}
 
 	/**
