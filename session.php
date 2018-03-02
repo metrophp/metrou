@@ -23,12 +23,12 @@ class Metrou_Session {
 	 * Start a session and save and HTTP Referer
 	 */
 	public function start() {
-		session_name($this->sessionName);
+		@session_name($this->sessionName);
 		if ($this->started) {
 			return;
 		}
 		$this->started = TRUE;
-		ini_set('session.gc_maxlifetime', $this->timeout);
+		@ini_set('session.gc_maxlifetime', $this->timeout);
 
 		//set session cookie to far future expire
 		$oldlifetime = ini_get('session.cookie_lifetime');
@@ -37,9 +37,9 @@ class Metrou_Session {
 		$oldsecure   = ini_get('session.cookie_secure');
 		$oldhttp     = ini_get('session.cookie_httponly');
 		//session_set_cookie_params ( 86400*365 , '/' ,  $olddomain ,  $oldsecure ,  TRUE );
-		session_set_cookie_params ( 0 , '/' ,  $olddomain ,  $oldsecure ,  TRUE );
+		@session_set_cookie_params ( 0 , '/' ,  $olddomain ,  $oldsecure ,  TRUE );
 		@session_start();
-		session_set_cookie_params ( $oldlifetime, $oldpath ,  $olddomain ,  $oldsecure ,  $oldhttp );
+		@session_set_cookie_params ( $oldlifetime, $oldpath ,  $olddomain ,  $oldsecure ,  $oldhttp );
 		$this->sessionId = session_id();
 		$this->touch();
 	}
