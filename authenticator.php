@@ -61,6 +61,9 @@ class Metrou_Authenticator {
 		$hashAdapterList = _get('auth.hashList', array());
 		if ( !count($hashAdapterList) ) {
 			$hashAdapterList = array( _make('metrou/hash/bcrypt.php') );
+			if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
+				array_unshift($hashAdapterList, _make('metrou/hash/argon2i.php') );
+			}
 		}
 
 		$this->subject = Metrou_Subject::createFromUsername($uname, $pass);
